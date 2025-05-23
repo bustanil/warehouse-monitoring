@@ -37,7 +37,7 @@ public class CentralMonitoringService {
     }
 
     private void processMeasurement(MeasurementReceived measurementReceived) {
-        logger.info("Received measurement received: {}", measurementReceived);
+        logger.debug("Received measurement received: {}", measurementReceived);
         SensorType sensorType = measurementReceived.sensorMeasurement().getSensorType();
         switch (sensorType) {
             case HUMIDITY:
