@@ -19,6 +19,16 @@ public class SensorParserTest {
     }
 
     @Test
+    public void shouldParseHumidityData(){
+        var parser = new SensorParser();
+        var temperatureMeasurement = parser.parse("sensor_id=h1; value=50", SensorMeasurement.Type.HUMIDITY);
+        assertThat(temperatureMeasurement).isNotNull();
+        assertThat(temperatureMeasurement.getSensorId()).isEqualTo("h1");
+        assertThat(temperatureMeasurement.getValue()).isEqualTo(50.0);
+        assertThat(temperatureMeasurement.getSensorType()).isEqualTo(SensorMeasurement.Type.HUMIDITY);
+    }
+
+    @Test
     public void shouldThrowExceptionWhenDataIsInvalid(){
         var parser = new SensorParser();
         assertThatException().isThrownBy(() -> {

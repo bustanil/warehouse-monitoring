@@ -23,5 +23,5 @@ public class SensorMeasurement {
         return sensorType;
     }
 
-    public enum Type { TEMPERATURE }
+    public enum Type {HUMIDITY, TEMPERATURE }
 }
