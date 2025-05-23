@@ -3,6 +3,7 @@ package com.bustanil.monitoring.service;
 import com.bustanil.shared.domain.MeasurementReceived;
 import com.bustanil.shared.domain.SensorMeasurement.SensorType;
 import jakarta.annotation.PostConstruct;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,28 +30,26 @@ public class CentralMonitoringService {
     public void startMonitoring() {
         kafkaConsumerTemplate
                 .receiveAutoAck()
-                .map(record -> record.value())
-                .onErrorContinue((t, o) -> {
-                    logger.error("Error occurred while monitoring", t);
-                })
-                .subscribe(
-                        measurementReceived -> {
-                            logger.info("Received measurement received: {}", measurementReceived);
-                            SensorType sensorType = measurementReceived.sensorMeasurement().getSensorType();
-                            switch (sensorType) {
-                                case HUMIDITY:
-                                    checkThresholdAndAlarm(measurementReceived, humidityThreshold);
-                                    break;
-                                case TEMPERATURE:
-                                    checkThresholdAndAlarm(measurementReceived, temperatureThreshold);
-                                    break;
-                                default:
-                                    logger.error("Unknown sensor type: {}", sensorType);
-                                    break;
-                            }
-                        },
+                .map(ConsumerRecord::value)
+                .subscribe(this::processMeasurement,
                         t -> logger.error("Error occurred while monitoring", t)
                 );
+    }
+
+    private void processMeasurement(MeasurementReceived measurementReceived) {
+        logger.info("Received measurement received: {}", measurementReceived);
+        SensorType sensorType = measurementReceived.sensorMeasurement().getSensorType();
+        switch (sensorType) {
+            case HUMIDITY:
+                checkThresholdAndAlarm(measurementReceived, humidityThreshold);
+                break;
+            case TEMPERATURE:
+                checkThresholdAndAlarm(measurementReceived, temperatureThreshold);
+                break;
+            default:
+                logger.error("Unknown sensor type: {}", sensorType);
+                break;
+        }
     }
 
     private void checkThresholdAndAlarm(MeasurementReceived measurementReceived, Double temperatureThreshold) {
