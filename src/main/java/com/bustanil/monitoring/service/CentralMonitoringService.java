@@ -55,7 +55,10 @@ public class CentralMonitoringService {
     private void checkThresholdAndAlarm(MeasurementReceived measurementReceived, Double temperatureThreshold) {
         if (measurementReceived.sensorMeasurement().getValue() > temperatureThreshold) {
             logger.warn("⚠\uFE0F {} threshold exceeded at warehouse {}, {} > {}",
-                    measurementReceived.sensorMeasurement().getSensorType().toString(), measurementReceived.warehouseId(), measurementReceived.sensorMeasurement().getValue(), temperatureThreshold);
+                    measurementReceived.sensorMeasurement().getSensorType().toString(),
+                    measurementReceived.warehouseId(),
+                    measurementReceived.sensorMeasurement().getValue(),
+                    temperatureThreshold);
         }
     }
 }
