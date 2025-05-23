@@ -1,7 +1,7 @@
 package com.bustanil.warehouse.service;
 
-import com.bustanil.warehouse.domain.MeasurementReceived;
-import com.bustanil.warehouse.domain.SensorMeasurement;
+import com.bustanil.shared.domain.MeasurementReceived;
+import com.bustanil.shared.domain.SensorMeasurement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;

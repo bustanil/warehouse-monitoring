@@ -1,6 +1,6 @@
 package com.bustanil.warehouse.service;
 
-import com.bustanil.warehouse.domain.SensorMeasurement;
+import com.bustanil.shared.domain.SensorMeasurement;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;

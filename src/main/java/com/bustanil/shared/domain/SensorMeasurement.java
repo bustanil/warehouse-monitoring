@@ -1,4 +1,4 @@
-package com.bustanil.warehouse.domain;
+package com.bustanil.shared.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

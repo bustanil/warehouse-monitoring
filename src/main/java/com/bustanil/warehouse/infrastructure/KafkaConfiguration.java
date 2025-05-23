@@ -1,6 +1,6 @@
 package com.bustanil.warehouse.infrastructure;
 
-import com.bustanil.warehouse.domain.MeasurementReceived;
+import com.bustanil.shared.domain.MeasurementReceived;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;

@@ -1,6 +1,6 @@
 package com.bustanil.warehouse.service;
 
-import com.bustanil.warehouse.domain.SensorMeasurement;
+import com.bustanil.shared.domain.SensorMeasurement;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

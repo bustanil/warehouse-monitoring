@@ -1,6 +1,6 @@
 package com.bustanil.warehouse.service;
 
-import com.bustanil.warehouse.domain.SensorMeasurement;
+import com.bustanil.shared.domain.SensorMeasurement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
