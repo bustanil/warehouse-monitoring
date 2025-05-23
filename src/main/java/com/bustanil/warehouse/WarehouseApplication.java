@@ -38,10 +38,14 @@ class UDPServerStarter implements CommandLineRunner {
     private int temperaturePort;
     @Value("${warehouse.sensors.humidity.port}")
     private int humidityPort;
-    @Autowired
-    private WarehouseService warehouseService;
+
+    private final WarehouseService warehouseService;
 
     private final List<Disposable> connections = new ArrayList<>();
+
+    public UDPServerStarter(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
 
 
     @Override
