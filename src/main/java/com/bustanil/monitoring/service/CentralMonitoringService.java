@@ -30,6 +30,10 @@ public class CentralMonitoringService {
     public void startMonitoring() {
         kafkaConsumerTemplate
                 .receiveAutoAck()
+                .doOnNext(record -> {
+                    String traceId = new String(record.headers().lastHeader("trace-id").value());
+                    logger.info("Received record with trace-id: {}", traceId);
+                })
                 .map(ConsumerRecord::value)
                 .subscribe(this::processMeasurement,
                         t -> logger.error("Error occurred while monitoring", t)
