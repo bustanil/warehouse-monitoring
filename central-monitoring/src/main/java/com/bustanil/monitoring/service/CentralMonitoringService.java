@@ -1,6 +1,7 @@
 package com.bustanil.monitoring.service;
 
 import com.bustanil.shared.domain.MeasurementReceived;
+import com.bustanil.shared.domain.SensorMeasurement;
 import com.bustanil.shared.domain.SensorMeasurement.SensorType;
 import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -39,13 +40,18 @@ public class CentralMonitoringService {
                     }
                 })
                 .map(ConsumerRecord::value)
+                .filter(measurementReceived -> {
+                    SensorMeasurement sensorMeasurement = measurementReceived.sensorMeasurement();
+                    return sensorMeasurement.getSensorType() == SensorType.TEMPERATURE ||
+                            sensorMeasurement.getSensorType() == SensorType.HUMIDITY;
+                })
                 .subscribe(this::processMeasurement,
                         t -> logger.error("Error occurred while monitoring", t)
                 );
     }
 
     private void processMeasurement(MeasurementReceived measurementReceived) {
-        logger.debug("Received measurement received: {}", measurementReceived);
+        logger.debug("Measurement received: {}", measurementReceived);
         SensorType sensorType = measurementReceived.sensorMeasurement().getSensorType();
         switch (sensorType) {
             case HUMIDITY:
@@ -53,9 +59,6 @@ public class CentralMonitoringService {
                 break;
             case TEMPERATURE:
                 checkThresholdAndAlarm(measurementReceived, temperatureThreshold);
-                break;
-            default:
-                logger.error("Unknown sensor type: {}", sensorType);
                 break;
         }
     }
