@@ -16,8 +16,8 @@ public class SensorParser {
             String sensorId = matcher.group(1);
             double value = Double.parseDouble(matcher.group(2));
             return new SensorMeasurement(sensorId, value, type);
+        } else {
+            throw new IllegalArgumentException("Sensor data is invalid");
         }
-
-        return null;
     }
 }
