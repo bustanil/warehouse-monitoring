@@ -4,6 +4,7 @@ import com.bustanil.shared.domain.MeasurementReceived;
 import com.bustanil.shared.domain.SensorMeasurement.SensorType;
 import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.header.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,11 @@ public class CentralMonitoringService {
         kafkaConsumerTemplate
                 .receiveAutoAck()
                 .doOnNext(record -> {
-                    String traceId = new String(record.headers().lastHeader("trace-id").value());
-                    logger.info("Received record with trace-id: {}", traceId);
+                    Header header = record.headers().lastHeader("trace-id");
+                    if (header != null) {
+                        String traceId = new String(header.value());
+                        logger.info("Received record with trace-id: {}", traceId);
+                    }
                 })
                 .map(ConsumerRecord::value)
                 .subscribe(this::processMeasurement,

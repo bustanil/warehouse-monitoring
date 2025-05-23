@@ -2,6 +2,8 @@ package com.bustanil.warehouse.service;
 
 import com.bustanil.shared.domain.MeasurementReceived;
 import com.bustanil.shared.domain.SensorMeasurement;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +15,6 @@ import reactor.kafka.sender.SenderResult;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +33,9 @@ class MessageProducerTest {
     void sendMeasurement_Success_CompletesSuccessfully() {
         // Given
         var sensorMeasurement = new SensorMeasurement("t1", 25.5, SensorMeasurement.SensorType.TEMPERATURE);
-        when(kafkaTemplate.send(eq("sensor-measurements"), eq("test-warehouse"), eq(new MeasurementReceived("test-warehouse", sensorMeasurement))))
+        RecordHeaders headers = new RecordHeaders();
+        headers.add("trace-id", "test".getBytes());
+        when(kafkaTemplate.send((ProducerRecord<String, MeasurementReceived>) any()))
                 .thenReturn(Mono.just(senderResult));
 
         // When
@@ -50,7 +53,7 @@ class MessageProducerTest {
         var sensorMeasurement = new SensorMeasurement("t1", 25.5, SensorMeasurement.SensorType.TEMPERATURE);
         RuntimeException kafkaError = new RuntimeException("Kafka connection failed");
 
-        when(kafkaTemplate.send(any(), any(), any()))
+        when(kafkaTemplate.send((ProducerRecord<String, MeasurementReceived>) any()))
                 .thenReturn(Mono.error(kafkaError));
 
         // When
